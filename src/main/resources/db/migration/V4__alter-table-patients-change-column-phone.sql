@@ -1,0 +1,2 @@
+ALTER TABLE patients
+CHANGE COLUMN phone phone VARCHAR(17);
