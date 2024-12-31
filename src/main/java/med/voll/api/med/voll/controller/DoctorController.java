@@ -1,5 +1,6 @@
 package med.voll.api.med.voll.controller;
 
+import med.voll.api.med.voll.dto.DoctorDto;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -7,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 public class DoctorController {
 
     @PostMapping
-    public void register(@RequestBody String json){
-        System.out.println(json);
+    public void register(@RequestBody DoctorDto doctorDto){
+        System.out.println(doctorDto);
 
     }
 

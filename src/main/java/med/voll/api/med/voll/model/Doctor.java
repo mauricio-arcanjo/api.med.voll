@@ -39,4 +39,6 @@ public class Doctor {
     @NotBlank
     private Speciality speciality;
 
+
+
 }
