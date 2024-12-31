@@ -11,7 +11,6 @@ import med.voll.api.med.voll.dto.DoctorDto;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @Embeddable //Allow the class to be embedded into other entities tables
 public class Address {
 
@@ -23,6 +22,8 @@ public class Address {
     private String state;
     private String postalCode;
 
+    public Address() {
+    }
 
     public Address(AddressDto addressDto) {
         this.street = addressDto.street();
