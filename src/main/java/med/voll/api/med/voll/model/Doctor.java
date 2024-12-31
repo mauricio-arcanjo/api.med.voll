@@ -37,6 +37,6 @@ public class Doctor {
 
     @Enumerated (EnumType.STRING)
     @NotBlank
-    private String speciality;
+    private Speciality speciality;
 
 }
