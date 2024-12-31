@@ -1,5 +1,6 @@
 package med.voll.api.med.voll.model;
 
+import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Embeddable //Allow the class to be embedded into other entities tables
 public class Address {
 
     private String street;
