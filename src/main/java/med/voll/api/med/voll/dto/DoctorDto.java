@@ -3,7 +3,7 @@ package med.voll.api.med.voll.dto;
 import med.voll.api.med.voll.model.Speciality;
 
 public record DoctorDto(
-        String nome,
+        String name,
         String email,
         String phone,
         String crm,

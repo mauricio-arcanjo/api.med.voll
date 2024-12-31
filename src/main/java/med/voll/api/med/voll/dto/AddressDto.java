@@ -1,7 +1,7 @@
 package med.voll.api.med.voll.dto;
 
 public record AddressDto(
-        String streetName,
+        String street,
         String number,
         String complement,
         String neighborhood,

@@ -39,6 +39,7 @@ public class Doctor {
     @NotBlank
     private Speciality speciality;
 
-
+    @NotNull
+    private Address address;
 
 }
