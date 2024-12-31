@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import med.voll.api.med.voll.dto.DoctorDto;
 
 
 @Getter
@@ -35,4 +36,12 @@ public class Doctor {
     @Embedded //Address is a different class however in DB it is persisted in doctor's table. Needs annotation @Embeddable in class address
     private Address address;
 
+    public Doctor(DoctorDto doctorDto) {
+        this.name = doctorDto.name();
+        this.email = doctorDto.email();
+        this.phone = doctorDto.phone();
+        this.crm = doctorDto.crm();
+        this.speciality = doctorDto.speciality();
+        this.address = new Address(doctorDto.address());
+    }
 }
