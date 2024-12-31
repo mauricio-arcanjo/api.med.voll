@@ -27,6 +27,7 @@ public class Patient {
 
     private String cpf;
 
+
     @Embedded //Address is a different class however in DB it is persisted in patient's table
     private Address address;
 

@@ -31,6 +31,7 @@ public class Doctor {
     @Enumerated (EnumType.STRING)
     private Speciality speciality;
 
+
     @Embedded //Address is a different class however in DB it is persisted in doctor's table. Needs annotation @Embeddable in class address
     private Address address;
 
