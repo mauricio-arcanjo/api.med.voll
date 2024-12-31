@@ -20,24 +20,17 @@ public class Doctor {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     private String name;
 
-    @NotBlank
-    @Email
     private String email;
 
-    @NotBlank
     private String phone;
 
-    @NotBlank
     private String crm;
 
     @Enumerated (EnumType.STRING)
-    @NotBlank
     private Speciality speciality;
 
-    @NotNull
     @Embedded //Address is a different class however in DB it is persisted in doctor's table. Needs annotation @Embeddable in class address
     private Address address;
 

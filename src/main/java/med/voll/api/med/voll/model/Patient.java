@@ -19,20 +19,14 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     private String name;
 
-    @NotBlank
-    @Email
     private String email;
 
-    @NotBlank
     private String phone;
 
-    @NotBlank
     private String cpf;
 
-    @NotNull
     @Embedded //Address is a different class however in DB it is persisted in patient's table
     private Address address;
 
