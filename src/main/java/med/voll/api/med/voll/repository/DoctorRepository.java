@@ -1,4 +1,7 @@
 package med.voll.api.med.voll.repository;
 
-public class DoctorRepository {
+import med.voll.api.med.voll.model.Doctor;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 }
