@@ -1,5 +1,6 @@
 package med.voll.api.med.voll.controller;
 
+import jakarta.validation.Valid;
 import jakarta.transaction.Transactional;
 import med.voll.api.med.voll.dto.DoctorDto;
 import med.voll.api.med.voll.model.Doctor;
@@ -21,7 +22,7 @@ public class DoctorController {
         inconsistent state. If several actions need to be treated as a single unit of work (either all are completed, or none
         are applied). If an exception occurs, a rollback is automatically performed
      */
-    public void register(@RequestBody DoctorDto doctorDto){
+    public void register(@RequestBody @Valid DoctorDto doctorDto){
 
         doctorRepository.save(new Doctor(doctorDto));
 
