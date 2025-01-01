@@ -8,6 +8,7 @@ import med.voll.api.med.voll.service.impl.DoctorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,10 +42,16 @@ public class DoctorController {
 
 /*
      Find all pageable Rest API
+     URL to access pageable list
      http://localhost:8080/doctors?size=NUMBER-OF-ITEMS&page=NUMBER-OF-PAGE
+
+     Url to access sorted list by name (the part ,desc orders in descendent order and is optional)
+     http://localhost:8080/doctors?sort=name,desc
+
+     @PageableDefault can be used with one or more parameters. Also, if any parameter is sent by the URL, it's gonna override the default.
  */
     @GetMapping
-    public Page<DoctorListDto> listPageable(Pageable pageable) {
+    public Page<DoctorListDto> listPageable(@PageableDefault(size=10, page=0, sort = {"name"} ) Pageable pageable) {
         return doctorService.listPageable(pageable);
     }
 
