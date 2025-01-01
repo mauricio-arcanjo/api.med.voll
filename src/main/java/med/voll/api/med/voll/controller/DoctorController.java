@@ -6,6 +6,8 @@ import med.voll.api.med.voll.dto.DoctorDto;
 import med.voll.api.med.voll.dto.DoctorListDto;
 import med.voll.api.med.voll.service.impl.DoctorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,11 +32,20 @@ public class DoctorController {
         return doctorService.register(doctorDto);
     }
 
+    // Find all Rest API
     @GetMapping
-    public List<DoctorListDto> list(){
+    @RequestMapping("/all")
+    public List<DoctorListDto> list() {
         return doctorService.list();
     }
 
-
+/*
+     Find all pageable Rest API
+     http://localhost:8080/doctors?size=NUMBER-OF-ITEMS&page=NUMBER-OF-PAGE
+ */
+    @GetMapping
+    public Page<DoctorListDto> listPageable(Pageable pageable) {
+        return doctorService.listPageable(pageable);
+    }
 
 }

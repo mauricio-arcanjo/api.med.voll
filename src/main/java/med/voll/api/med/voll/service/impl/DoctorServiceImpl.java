@@ -7,6 +7,8 @@ import med.voll.api.med.voll.model.repository.DoctorRepository;
 import med.voll.api.med.voll.service.interfaces.DoctorService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,4 +36,12 @@ public class DoctorServiceImpl implements DoctorService {
 
         return doctorRepository.findAll().stream().map(DoctorListDto::new).toList();
     }
+
+    @Override
+    public Page<DoctorListDto> listPageable(Pageable pageable) {
+
+        return doctorRepository.findAll(pageable).map(DoctorListDto::new);
+    }
+
+
 }
