@@ -24,7 +24,8 @@ public class DoctorServiceImpl implements DoctorService {
         System.out.println("Received Doctor DTO: " + doctorDto);
         Doctor doctor = modelMapper.map(doctorDto, Doctor.class);
         System.out.println("Mapped Doctor: " + doctor);
-        return null;
+//        doctorRepository.save(doctor);
+        return modelMapper.map(doctorRepository.save(doctor), DoctorDto.class);
 
     }
 }
