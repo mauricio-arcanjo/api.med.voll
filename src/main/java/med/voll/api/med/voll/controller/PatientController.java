@@ -3,12 +3,13 @@ package med.voll.api.med.voll.controller;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import med.voll.api.med.voll.dto.PatientDto;
+import med.voll.api.med.voll.dto.PatientListDto;
 import med.voll.api.med.voll.service.impl.PatientServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/patients")
@@ -29,6 +30,13 @@ public class PatientController {
 
         return patientService.register(patientDto);
 
+    }
+
+    //List Rest API
+    @GetMapping
+    public Page<PatientListDto> listPageable(@PageableDefault (size = 10, page = 0, sort = {"name"})Pageable pageable){
+
+        return patientService.listPageable(pageable);
     }
 
 }
