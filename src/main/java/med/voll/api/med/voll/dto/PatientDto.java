@@ -28,7 +28,7 @@ public class PatientDto {
     private String phone;
 
     @NotBlank
-    @CPF
+//    @CPF
     private String cpf;
 
     @NotNull
