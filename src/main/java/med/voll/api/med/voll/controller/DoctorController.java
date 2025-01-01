@@ -13,11 +13,13 @@ public class DoctorController {
     @Autowired
     private DoctorServiceImpl doctorService;
 
+    //Register Rest API
     @PostMapping
-    public void register(@RequestBody @Valid DoctorDto doctorDto){
+    public DoctorDto register(@RequestBody @Valid DoctorDto doctorDto){
 
-        doctorService.register(doctorDto);
-
+        return doctorService.register(doctorDto);
     }
+
+
 
 }

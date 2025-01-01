@@ -1,4 +1,4 @@
-package med.voll.api.med.voll.model;
+package med.voll.api.med.voll.model.entity;
 
 public enum Speciality {
     ORTHOPEDDICS,

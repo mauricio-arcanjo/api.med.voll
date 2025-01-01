@@ -4,26 +4,35 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import lombok.*;
+import med.voll.api.med.voll.model.entity.Speciality;
 import org.hibernate.validator.constraints.br.CPF;
 
-public record PatientDto(
 
-        @NotBlank
-        String name,
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+public class PatientDto {
 
-        @NotBlank
-        @Email
-        String email,
+    @NotBlank
+    private String name;
 
-        @NotBlank
-        String phone,
+    @NotBlank
+    @Email
+    private String email;
 
-        @NotBlank
-        @CPF
-        String cpf,
+    @NotBlank
+    private String phone;
 
-        @NotNull
-        @Valid
-        AddressDto address
-) {
+    @NotBlank
+    @CPF
+    private String cpf;
+
+    @NotNull
+    @Valid
+    private AddressDto address;
+
 }

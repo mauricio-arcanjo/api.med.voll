@@ -1,4 +1,4 @@
-package med.voll.api.med.voll.service;
+package med.voll.api.med.voll.service.interfaces;
 
 import med.voll.api.med.voll.dto.DoctorDto;
 

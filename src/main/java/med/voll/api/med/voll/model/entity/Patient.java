@@ -1,9 +1,6 @@
-package med.voll.api.med.voll.model;
+package med.voll.api.med.voll.model.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -26,7 +23,6 @@ public class Patient {
     private String phone;
 
     private String cpf;
-
 
     @Embedded //Address is a different class however in DB it is persisted in patient's table
     private Address address;
