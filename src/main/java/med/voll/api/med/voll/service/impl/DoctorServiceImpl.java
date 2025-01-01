@@ -1,7 +1,6 @@
 package med.voll.api.med.voll.service.impl;
 
 import med.voll.api.med.voll.dto.DoctorDto;
-import med.voll.api.med.voll.dto.DoctorDto1;
 import med.voll.api.med.voll.model.Doctor;
 import med.voll.api.med.voll.repository.DoctorRepository;
 import med.voll.api.med.voll.service.DoctorService;
@@ -18,11 +17,6 @@ public class DoctorServiceImpl implements DoctorService {
     //It's needed to add a bean configuration before use
     @Autowired
     private ModelMapper modelMapper;
-
-//    public DoctorServiceImpl(ModelMapper modelMapper, DoctorRepository doctorRepository) {
-//        this.modelMapper = modelMapper;
-//        this.doctorRepository = doctorRepository;
-//    }
 
     @Override
     public DoctorDto register(DoctorDto doctorDto) {

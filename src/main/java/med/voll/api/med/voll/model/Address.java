@@ -1,15 +1,13 @@
 package med.voll.api.med.voll.model;
 
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Embeddable //Allow the class to be embedded into other entities tables
 public class Address {
 
