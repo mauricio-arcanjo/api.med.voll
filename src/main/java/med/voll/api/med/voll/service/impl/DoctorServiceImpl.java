@@ -2,6 +2,7 @@ package med.voll.api.med.voll.service.impl;
 
 import med.voll.api.med.voll.dto.DoctorDto;
 import med.voll.api.med.voll.dto.DoctorListDto;
+import med.voll.api.med.voll.dto.DoctorUpdateDto;
 import med.voll.api.med.voll.model.entity.Doctor;
 import med.voll.api.med.voll.model.repository.DoctorRepository;
 import med.voll.api.med.voll.service.interfaces.DoctorService;
@@ -41,6 +42,16 @@ public class DoctorServiceImpl implements DoctorService {
     public Page<DoctorListDto> listPageable(Pageable pageable) {
 
         return doctorRepository.findAll(pageable).map(DoctorListDto::new);
+    }
+
+    @Override
+    public DoctorDto update(DoctorUpdateDto doctorUpdateDto) {
+
+        var doctor = doctorRepository.getReferenceById(doctorUpdateDto.id());
+
+        doctor.updateData(doctorUpdateDto);
+
+        return modelMapper.map(doctorRepository.save(doctor), DoctorDto.class);
     }
 
 
