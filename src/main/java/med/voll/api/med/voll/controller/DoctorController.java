@@ -56,6 +56,7 @@ public class DoctorController {
         return doctorService.listPageable(pageable);
     }
 
+    //Update Rest API
     @PutMapping
     @Transactional
     public DoctorDto update(@RequestBody DoctorUpdateDto doctorUpdateDto){

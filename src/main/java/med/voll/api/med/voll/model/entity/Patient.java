@@ -2,6 +2,7 @@ package med.voll.api.med.voll.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import med.voll.api.med.voll.dto.PatientUpdateDto;
 
 @Getter
 @Setter
@@ -26,5 +27,19 @@ public class Patient {
 
     @Embedded //Address is a different class however in DB it is persisted in patient's table
     private Address address;
+
+    public void updateData(PatientUpdateDto patientUpdateDto){
+
+        if (patientUpdateDto.name() != null){
+            this.name = patientUpdateDto.name();
+        }
+        if (patientUpdateDto.phone() != null){
+            this.phone = patientUpdateDto.phone();
+        }
+        if (patientUpdateDto.address() != null){
+            this.address = address.updateData(patientUpdateDto.address());
+        }
+
+    }
 
 }

@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import med.voll.api.med.voll.dto.PatientDto;
 import med.voll.api.med.voll.dto.PatientListDto;
+import med.voll.api.med.voll.dto.PatientUpdateDto;
 import med.voll.api.med.voll.service.impl.PatientServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,6 +38,15 @@ public class PatientController {
     public Page<PatientListDto> listPageable(@PageableDefault (size = 10, page = 0, sort = {"name"})Pageable pageable){
 
         return patientService.listPageable(pageable);
+    }
+
+    //Update Rest API
+    @PutMapping
+    @Transactional
+    public PatientDto update(@RequestBody PatientUpdateDto patientUpdateDto){
+
+        return patientService.update(patientUpdateDto);
+
     }
 
 }
