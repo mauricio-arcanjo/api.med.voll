@@ -1,0 +1,2 @@
+ALTER TABLE doctors ADD active TINYINT NOT NULL;
+ALTER TABLE patients ADD active TINYINT NOT NULL;
