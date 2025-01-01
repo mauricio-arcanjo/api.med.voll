@@ -4,6 +4,7 @@ import med.voll.api.med.voll.model.entity.Patient;
 
 public record PatientListDto(
 
+        Long id,
         String name,
         String email,
         String cpf
@@ -11,7 +12,8 @@ public record PatientListDto(
 ) {
 
     public PatientListDto(Patient patient){
-        this(patient.getName(), patient.getEmail(), patient.getCpf());
+
+        this(patient.getId(), patient.getName(), patient.getEmail(), patient.getCpf());
     }
 
 }

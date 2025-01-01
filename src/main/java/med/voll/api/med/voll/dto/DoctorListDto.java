@@ -5,6 +5,7 @@ import med.voll.api.med.voll.model.entity.Speciality;
 
 public record DoctorListDto (
 
+    Long id,
     String name,
     String email,
     String crm,
@@ -13,6 +14,6 @@ public record DoctorListDto (
 ){
 
     public DoctorListDto(Doctor doctor) {
-        this (doctor.getName(), doctor.getEmail(), doctor.getCrm(), doctor.getSpeciality());
+        this (doctor.getId(), doctor.getName(), doctor.getEmail(), doctor.getCrm(), doctor.getSpeciality());
     }
 }
