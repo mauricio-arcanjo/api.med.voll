@@ -12,6 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id") //Generate hash code only from id and not from all attributes
+@ToString
 @Entity
 @Table (name = "doctors")
 public class Doctor {
@@ -35,4 +36,20 @@ public class Doctor {
     @Embedded //Address is a different class however in DB it is persisted in doctor's table. Needs annotation @Embeddable in class address
     private Address address;
 
+    @Override
+    public String toString() {
+        return "Doctor{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", crm='" + crm + '\'' +
+                ", speciality=" + speciality +
+                ", address=" + address +
+                '}';
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

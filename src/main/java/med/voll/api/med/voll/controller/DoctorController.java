@@ -2,7 +2,7 @@ package med.voll.api.med.voll.controller;
 
 import jakarta.validation.Valid;
 import med.voll.api.med.voll.dto.DoctorDto;
-import med.voll.api.med.voll.service.DoctorService;
+import med.voll.api.med.voll.dto.DoctorDto1;
 import med.voll.api.med.voll.service.impl.DoctorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +15,9 @@ public class DoctorController {
     private DoctorServiceImpl doctorService;
 
     @PostMapping
-    public void register(@RequestBody @Valid DoctorDto doctorDto){
+    public void register(@RequestBody DoctorDto doctorDto){
 
+        System.out.println(doctorDto);
         doctorService.register(doctorDto);
 
     }
