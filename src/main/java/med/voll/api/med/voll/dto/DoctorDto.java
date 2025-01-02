@@ -37,4 +37,6 @@ public class DoctorDto {
     @Valid
     private AddressDto address;
 
+    private Boolean active = true;
+
 }

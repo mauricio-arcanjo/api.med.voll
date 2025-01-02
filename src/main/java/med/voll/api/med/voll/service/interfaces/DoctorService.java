@@ -14,4 +14,5 @@ public interface DoctorService {
     public List<DoctorListDto> list();
     public Page<DoctorListDto> listPageable(Pageable pageable);
     public DoctorDto update(DoctorUpdateDto doctorUpdateDto);
+    public DoctorDto delete(Long id);
 }

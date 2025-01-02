@@ -62,6 +62,14 @@ public class DoctorController {
     public DoctorDto update(@RequestBody DoctorUpdateDto doctorUpdateDto){
 
        return doctorService.update(doctorUpdateDto);
+    }
+
+    //Logical Delete Rest API
+    @DeleteMapping
+    @RequestMapping("/{id}")
+    public DoctorDto delete(@PathVariable Long id){
+
+        return doctorService.delete(id);
 
     }
 

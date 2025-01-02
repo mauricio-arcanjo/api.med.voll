@@ -41,7 +41,7 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public Page<DoctorListDto> listPageable(Pageable pageable) {
 
-        return doctorRepository.findAll(pageable).map(DoctorListDto::new);
+        return doctorRepository.findAllByActiveTrue(pageable).map(DoctorListDto::new);
     }
 
     @Override
@@ -50,6 +50,15 @@ public class DoctorServiceImpl implements DoctorService {
         var doctor = doctorRepository.getReferenceById(doctorUpdateDto.id());
 
         doctor.updateData(doctorUpdateDto);
+
+        return modelMapper.map(doctorRepository.save(doctor), DoctorDto.class);
+    }
+
+    @Override
+    public DoctorDto delete(Long id) {
+
+        var doctor = doctorRepository.getReferenceById(id);
+        doctor.setActive(false);
 
         return modelMapper.map(doctorRepository.save(doctor), DoctorDto.class);
     }
