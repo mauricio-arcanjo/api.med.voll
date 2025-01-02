@@ -1,1 +1,0 @@
-UPDATE doctors SET active = 1;
