@@ -67,6 +67,7 @@ public class DoctorController {
     //Logical Delete Rest API
     @DeleteMapping
     @RequestMapping("/{id}")
+    @Transactional
     public DoctorDto delete(@PathVariable Long id){
 
         return doctorService.delete(id);
