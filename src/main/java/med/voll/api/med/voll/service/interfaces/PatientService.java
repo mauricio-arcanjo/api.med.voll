@@ -9,5 +9,5 @@ public interface PatientService {
     public PatientDto register(PatientDto patientDto);
     public Page<PatientListDto> listPageable(Pageable pageable);
     public PatientDto update(PatientUpdateDto patientUpdateDto);
-
+    public PatientDto delete(Long id);
 }

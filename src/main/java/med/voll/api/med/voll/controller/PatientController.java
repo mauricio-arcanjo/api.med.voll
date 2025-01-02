@@ -49,4 +49,13 @@ public class PatientController {
 
     }
 
+    //Logical Delete Rest API
+    @DeleteMapping
+    @RequestMapping("/{id}")
+    public PatientDto delete(@PathVariable Long id){
+
+        return patientService.delete(id);
+
+    }
+
 }

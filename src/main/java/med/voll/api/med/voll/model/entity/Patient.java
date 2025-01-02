@@ -28,6 +28,8 @@ public class Patient {
     @Embedded //Address is a different class however in DB it is persisted in patient's table
     private Address address;
 
+    private Boolean active;
+
     public void updateData(PatientUpdateDto patientUpdateDto){
 
         if (patientUpdateDto.name() != null){
