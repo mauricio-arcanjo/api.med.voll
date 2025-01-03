@@ -11,14 +11,14 @@ import med.voll.api.med.voll.model.repository.PatientRepository;
 import med.voll.api.med.voll.service.interfaces.AppointmentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLOutput;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -53,6 +53,16 @@ public class AppointmentServiceImpl implements AppointmentService {
         Appointment appointment = modelMapper.map(defineDoctor(appointmentDto), Appointment.class);
         appointment.setEndingTimeDay(appointment.getInitialTimeDay().plusHours(1));
         return modelMapper.map(appointmentRepository.save(appointment), AppointmentDto.class);
+    }
+
+    @Override
+    public List<AppointmentDto> listByPatient(Long patientId) {
+
+        return appointmentRepository.findAllByPatientId(patientId)
+                .stream()
+                .map(appointment -> modelMapper.map(appointment, AppointmentDto.class))
+                .toList();
+
     }
 
     private AppointmentDto defineDoctor(AppointmentDto appointmentDto) {
