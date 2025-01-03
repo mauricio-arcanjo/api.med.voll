@@ -92,11 +92,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     private boolean isScheduledWithMinimumNotice(@NotNull LocalDateTime appointmentTime) {
         // Define the minimum time threshold as 30 minutes from the current time
-
         LocalDateTime minimumAllowedTime = LocalDateTime.now().plusMinutes(30);
-        System.out.println("Current time: " + LocalDateTime.now());
-        System.out.println("Minimum allowed time: " + minimumAllowedTime);
-        System.out.println("Appointment time: " + appointmentTime);
 
         // Check if the appointment is scheduled with sufficient notice
         if (appointmentTime.isAfter(minimumAllowedTime)) {

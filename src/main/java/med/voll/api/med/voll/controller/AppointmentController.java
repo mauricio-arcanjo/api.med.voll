@@ -1,5 +1,6 @@
 package med.voll.api.med.voll.controller;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import med.voll.api.med.voll.dto.AppointmentDto;
 import med.voll.api.med.voll.service.interfaces.AppointmentService;
@@ -17,6 +18,7 @@ public class AppointmentController {
     private AppointmentService appointmentService;
 
     @PostMapping
+    @Transactional
     public AppointmentDto createAppointment(@RequestBody @Valid AppointmentDto appointmentDto){
 
         return appointmentService.createAppointment(appointmentDto);
