@@ -2,6 +2,7 @@ package med.voll.api.med.voll.controller;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import med.voll.api.med.voll.dto.AppointmentCancelDto;
 import med.voll.api.med.voll.dto.AppointmentDto;
 import med.voll.api.med.voll.service.interfaces.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,11 @@ public class AppointmentController {
         return appointmentService.listByDoctor(id);
     }
 
+    @PutMapping
+    @Transactional
+    public AppointmentDto cancel(@RequestBody @Valid AppointmentCancelDto appointmentCancelDto){
 
+        return appointmentService.cancelAppointment(appointmentCancelDto);
+    }
 
 }

@@ -30,4 +30,7 @@ public class Appointment {
     @Column (name = "ending_time_day")
     private LocalDateTime endingTimeDay;
 
+    @Enumerated (EnumType.STRING)
+    private CancellationReason reason;
+
 }

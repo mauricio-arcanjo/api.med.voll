@@ -1,6 +1,7 @@
 package med.voll.api.med.voll.service.impl;
 
 import jakarta.validation.constraints.NotNull;
+import med.voll.api.med.voll.dto.AppointmentCancelDto;
 import med.voll.api.med.voll.dto.AppointmentDto;
 import med.voll.api.med.voll.model.entity.Appointment;
 import med.voll.api.med.voll.model.entity.Doctor;
@@ -11,8 +12,6 @@ import med.voll.api.med.voll.model.repository.PatientRepository;
 import med.voll.api.med.voll.service.interfaces.AppointmentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -71,6 +70,20 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .stream()
                 .map(appointment -> modelMapper.map(appointment, AppointmentDto.class))
                 .toList();
+    }
+
+    @Override
+    public AppointmentDto cancelAppointment(AppointmentCancelDto appointmentCancelDto) {
+
+        Appointment appointment = appointmentRepository.getReferenceById(appointmentCancelDto.id());
+        LocalDateTime checkMinimumNotice = appointment.getInitialTimeDay().minusHours(24);
+
+        if (LocalDateTime.now().isBefore(checkMinimumNotice)){
+            appointment.setReason(appointmentCancelDto.reason());
+            System.out.println("Appointment cancelled. Reason: " + appointment.getReason());
+        }
+
+        return modelMapper.map(appointment, AppointmentDto.class);
     }
 
     private AppointmentDto defineDoctor(AppointmentDto appointmentDto) {
