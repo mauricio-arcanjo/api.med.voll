@@ -4,6 +4,7 @@ import med.voll.api.med.voll.dto.AppointmentDto;
 
 public interface AppointmentService {
 
-public AppointmentDto createAppointment(AppointmentDto appointmentDto);
+    public AppointmentDto createAppointment(AppointmentDto appointmentDto);
+
 
 }

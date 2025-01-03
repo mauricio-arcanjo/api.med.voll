@@ -38,8 +38,6 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public AppointmentDto createAppointment(AppointmentDto appointmentDto) {
 
-        System.out.println(appointmentDto);
-
         if (!checkPatientStatus(appointmentDto)){
             return null;
         }
@@ -54,29 +52,51 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Appointment appointment = modelMapper.map(defineDoctor(appointmentDto), Appointment.class);
         appointment.setEndingTimeDay(appointment.getInitialTimeDay().plusHours(1));
-        System.out.println("Appointment has been made " + appointment);
         return modelMapper.map(appointmentRepository.save(appointment), AppointmentDto.class);
     }
 
     private AppointmentDto defineDoctor(AppointmentDto appointmentDto) {
-
         //Check if doctor is active
         if (appointmentDto.getDoctorId() != null){
             Doctor doctor = doctorRepository.getReferenceById(appointmentDto.getDoctorId());
+
             if (doctor.getActive()){
-                return appointmentDto;
+
+                if (doctorAvailability(appointmentDto)){
+                    return appointmentDto;
+                }
+
             } else {
                 System.out.println("The doctor " + doctor.getName() + " with ID " + doctor.getId() + " isn't active!");
-                System.out.println("Another doctor will be chosen randomly!");
             }
         }
+        System.out.println("Another doctor will be chosen randomly!");
         //Define doctor randomly
         List<Doctor> doctors = doctorRepository.findAllByActiveTrue();
         Random random = new Random();
-        int randomId = random.nextInt(doctors.size());
-        appointmentDto.setDoctorId(doctors.get(randomId).getId());
-        return appointmentDto;
+        int randomId;
 
+        do {
+            randomId = random.nextInt(doctors.size());
+            appointmentDto.setDoctorId(doctors.get(randomId).getId());
+
+        } while (!doctorAvailability(appointmentDto));
+
+        return appointmentDto;
+    }
+
+    private boolean doctorAvailability(AppointmentDto appointmentDto){
+
+        List<Appointment> appointments = appointmentRepository.findAllByDoctorId(appointmentDto.getDoctorId());
+
+        boolean doctorAvailability = appointments.stream()
+                .anyMatch(appointment -> appointment.getInitialTimeDay().equals(appointmentDto.getInitialTimeDay()));
+
+        if (doctorAvailability){
+            System.out.println("Doctor already has another appointment at the same time!");
+            return false;
+        }
+        return true;
     }
 
     private boolean checkPatientStatus(AppointmentDto appointmentDto) {
