@@ -19,9 +19,8 @@ public class AppointmentController {
     @PostMapping
     public AppointmentDto createAppointment(@RequestBody @Valid AppointmentDto appointmentDto){
 
-        appointmentService.createAppointment(appointmentDto);
+        return appointmentService.createAppointment(appointmentDto);
 
-        return null;
     }
 
 }

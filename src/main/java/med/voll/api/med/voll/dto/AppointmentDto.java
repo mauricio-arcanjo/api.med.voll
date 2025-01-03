@@ -1,5 +1,6 @@
 package med.voll.api.med.voll.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -18,7 +19,9 @@ public class AppointmentDto {
     @NotNull
     private Long  patientId;
 
-    private LocalDateTime InitialTimeDay;
-    private LocalDateTime EndingTimeDay;
+    @NotNull
+    private LocalDateTime initialTimeDay;
+
+    private LocalDateTime endingTimeDay;
 
 }
