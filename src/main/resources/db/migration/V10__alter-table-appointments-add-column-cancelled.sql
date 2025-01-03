@@ -1,0 +1,1 @@
+ALTER TABLE appointments ADD cancelled VARCHAR(100) NOT NULL;

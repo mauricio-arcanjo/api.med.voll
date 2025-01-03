@@ -38,4 +38,6 @@ public class AppointmentController {
         return appointmentService.listByDoctor(id);
     }
 
+
+
 }
