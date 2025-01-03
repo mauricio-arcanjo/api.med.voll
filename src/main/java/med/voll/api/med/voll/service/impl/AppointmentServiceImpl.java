@@ -13,10 +13,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLOutput;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -38,21 +40,21 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         System.out.println(appointmentDto);
 
-        if (!isPatientActive(appointmentDto)){
+        if (!checkPatientStatus(appointmentDto)){
             return null;
         }
 
         if (!clinicIsOpened(appointmentDto.getInitialTimeDay())){
+            System.out.println("Clinic is closed during the time requested!");
             return null;
         }
         if (!isScheduledWithMinimumNotice(appointmentDto.getInitialTimeDay())){
             return null;
         }
 
-        System.out.println(appointmentDto);
         Appointment appointment = modelMapper.map(defineDoctor(appointmentDto), Appointment.class);
         appointment.setEndingTimeDay(appointment.getInitialTimeDay().plusHours(1));
-
+        System.out.println("Appointment has been made " + appointment);
         return modelMapper.map(appointmentRepository.save(appointment), AppointmentDto.class);
     }
 
@@ -68,7 +70,6 @@ public class AppointmentServiceImpl implements AppointmentService {
                 System.out.println("Another doctor will be chosen randomly!");
             }
         }
-
         //Define doctor randomly
         List<Doctor> doctors = doctorRepository.findAllByActiveTrue();
         Random random = new Random();
@@ -78,16 +79,33 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     }
 
-    private boolean isPatientActive(AppointmentDto appointmentDto) {
+    private boolean checkPatientStatus(AppointmentDto appointmentDto) {
         Patient patient = patientRepository.getReferenceById(appointmentDto.getPatientId());
 
-        return patient.getActive();
+        // Check if the patient is inactive
+        if (!patient.getActive()) {
+            System.out.println("Patient isn't active and appointment can't be made!");
+            return false;
+        }
+
+        // Check if the patient has another appointment on the same day
+        boolean hasAnotherAppointment = appointmentRepository.findAllByPatientId(appointmentDto.getPatientId())
+                .stream()
+                .anyMatch(appointment ->
+                        appointment.getInitialTimeDay().toLocalDate().isEqual(appointmentDto.getInitialTimeDay().toLocalDate())
+                );
+
+        if (hasAnotherAppointment) {
+            System.out.println("Patient can have only one appointment per day!");
+            return false;
+        }
+
+        return true; // Patient is active and has no conflicting appointments
     }
 
     private boolean clinicIsOpened(LocalDateTime time) {
 
-        //alterar horario
-        return time.getHour() >= 7 && time.getHour() < 23 && !time.getDayOfWeek().equals(DayOfWeek.SUNDAY);
+        return time.getHour() >= 7 && time.getHour() < 19 && !time.getDayOfWeek().equals(DayOfWeek.SUNDAY);
     }
 
     private boolean isScheduledWithMinimumNotice(@NotNull LocalDateTime appointmentTime) {
@@ -96,7 +114,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         // Check if the appointment is scheduled with sufficient notice
         if (appointmentTime.isAfter(minimumAllowedTime)) {
-            System.out.println("The appointment is scheduled with sufficient notice.");
             return true;
         } else {
             System.out.println("The appointment must be scheduled at least 30 minutes in advance.");
