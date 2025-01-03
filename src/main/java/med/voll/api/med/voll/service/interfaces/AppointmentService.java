@@ -8,5 +8,6 @@ public interface AppointmentService {
 
     public AppointmentDto createAppointment(AppointmentDto appointmentDto);
     public List<AppointmentDto> listByPatient(Long patientId);
+    public List<AppointmentDto> listByDoctor(Long doctorId);
 
 }

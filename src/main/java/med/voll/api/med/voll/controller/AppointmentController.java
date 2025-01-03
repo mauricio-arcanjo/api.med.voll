@@ -29,7 +29,13 @@ public class AppointmentController {
     public List<AppointmentDto> listAppointmentsByPatient (@PathVariable Long id){
 
         return appointmentService.listByPatient(id);
+    }
 
+    @GetMapping
+    @RequestMapping("/doctor/{id}")
+    public List<AppointmentDto> listAppointmentsByDoctor (@PathVariable Long id){
+
+        return appointmentService.listByDoctor(id);
     }
 
 }

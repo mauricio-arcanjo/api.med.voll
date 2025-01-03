@@ -62,7 +62,15 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .stream()
                 .map(appointment -> modelMapper.map(appointment, AppointmentDto.class))
                 .toList();
+    }
 
+    @Override
+    public List<AppointmentDto> listByDoctor(Long doctorId) {
+
+        return appointmentRepository.findAllByDoctorId(doctorId)
+                .stream()
+                .map(appointment -> modelMapper.map(appointment, AppointmentDto.class))
+                .toList();
     }
 
     private AppointmentDto defineDoctor(AppointmentDto appointmentDto) {
