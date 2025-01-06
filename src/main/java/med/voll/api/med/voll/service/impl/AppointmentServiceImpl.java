@@ -155,14 +155,12 @@ public class AppointmentServiceImpl implements AppointmentService {
         return time.getHour() >= 7 && time.getHour() < 19 && !time.getDayOfWeek().equals(DayOfWeek.SUNDAY);
     }
 
-    private boolean isScheduledWithMinimumNotice(@NotNull LocalDateTime appointmentTime) {
+    private void isScheduledWithMinimumNotice(@NotNull LocalDateTime appointmentTime) {
         // Define the minimum time threshold as 30 minutes from the current time
         LocalDateTime minimumAllowedTime = LocalDateTime.now().plusMinutes(30);
 
         // Check if the appointment is scheduled with sufficient notice
-        if (appointmentTime.isAfter(minimumAllowedTime)) {
-            return true;
-        } else {
+        if (!appointmentTime.isAfter(minimumAllowedTime)) {
             throw new AppointmentException("The appointment must be scheduled at least 30 minutes in advance.");
         }
     }
