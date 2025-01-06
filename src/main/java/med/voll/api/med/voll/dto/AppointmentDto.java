@@ -24,4 +24,8 @@ public class AppointmentDto {
 
     private LocalDateTime endingTimeDay;
 
+    private AppointmentDoctorDto doctor;
+
+    private AppointmentPatientDto patient;
+
 }
