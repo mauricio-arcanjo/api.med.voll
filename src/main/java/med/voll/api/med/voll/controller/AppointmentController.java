@@ -41,6 +41,7 @@ public class AppointmentController {
 
     @PutMapping
     @Transactional
+    @RequestMapping("/cancel")
     public AppointmentDto cancel(@RequestBody @Valid AppointmentCancelDto appointmentCancelDto){
 
         return appointmentService.cancelAppointment(appointmentCancelDto);

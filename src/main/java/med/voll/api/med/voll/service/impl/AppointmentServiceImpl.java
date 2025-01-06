@@ -3,6 +3,7 @@ package med.voll.api.med.voll.service.impl;
 import jakarta.validation.constraints.NotNull;
 import med.voll.api.med.voll.dto.AppointmentCancelDto;
 import med.voll.api.med.voll.dto.AppointmentDto;
+import med.voll.api.med.voll.exception.AppointmentException;
 import med.voll.api.med.voll.model.entity.Appointment;
 import med.voll.api.med.voll.model.entity.Doctor;
 import med.voll.api.med.voll.model.entity.Patient;
@@ -37,17 +38,15 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public AppointmentDto createAppointment(AppointmentDto appointmentDto) {
 
-        if (!checkPatientStatus(appointmentDto)){
-            return null;
-        }
+        //Checks if patient is active and if there is another appointment in the same day
+        checkPatientStatus(appointmentDto);
 
         if (!clinicIsOpened(appointmentDto.getInitialTimeDay())){
-            System.out.println("Clinic is closed during the time requested!");
-            return null;
+            throw new AppointmentException("Clinic is closed during the time requested!");
         }
-        if (!isScheduledWithMinimumNotice(appointmentDto.getInitialTimeDay())){
-            return null;
-        }
+
+        //Checks if there is at least 30 min of notice for appointment
+        isScheduledWithMinimumNotice(appointmentDto.getInitialTimeDay());
 
         Appointment appointment = modelMapper.map(defineDoctor(appointmentDto), Appointment.class);
         appointment.setEndingTimeDay(appointment.getInitialTimeDay().plusHours(1));
@@ -76,6 +75,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentDto cancelAppointment(AppointmentCancelDto appointmentCancelDto) {
 
         Appointment appointment = appointmentRepository.getReferenceById(appointmentCancelDto.id());
+
         LocalDateTime checkMinimumNotice = appointment.getInitialTimeDay().minusHours(24);
 
         if (LocalDateTime.now().isBefore(checkMinimumNotice)){
@@ -124,19 +124,17 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .anyMatch(appointment -> appointment.getInitialTimeDay().equals(appointmentDto.getInitialTimeDay()));
 
         if (doctorAvailability){
-            System.out.println("Doctor already has another appointment at the same time!");
-            return false;
+            throw new AppointmentException("Doctor already has another appointment at the same time!");
         }
         return true;
     }
 
-    private boolean checkPatientStatus(AppointmentDto appointmentDto) {
+    private void checkPatientStatus(AppointmentDto appointmentDto) throws AppointmentException {
         Patient patient = patientRepository.getReferenceById(appointmentDto.getPatientId());
 
         // Check if the patient is inactive
         if (!patient.getActive()) {
-            System.out.println("Patient isn't active and appointment can't be made!");
-            return false;
+            throw new AppointmentException("Patient isn't active and appointment can't be made!");
         }
 
         // Check if the patient has another appointment on the same day
@@ -147,11 +145,9 @@ public class AppointmentServiceImpl implements AppointmentService {
                 );
 
         if (hasAnotherAppointment) {
-            System.out.println("Patient can have only one appointment per day!");
-            return false;
+            throw new AppointmentException("Patient can have only one appointment per day!");
         }
 
-        return true; // Patient is active and has no conflicting appointments
     }
 
     private boolean clinicIsOpened(LocalDateTime time) {
@@ -167,8 +163,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (appointmentTime.isAfter(minimumAllowedTime)) {
             return true;
         } else {
-            System.out.println("The appointment must be scheduled at least 30 minutes in advance.");
-            return false;
+            throw new AppointmentException("The appointment must be scheduled at least 30 minutes in advance.");
         }
     }
 

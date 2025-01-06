@@ -1,0 +1,1 @@
+ALTER TABLE appointments CHANGE COLUMN cancelled cancelled VARCHAR(100);
