@@ -48,8 +48,7 @@ public class DoctorController {
         return ResponseEntity.created(uri).body(modelMapper.map(doctor, DoctorDto.class));
     }
 
-    @GetMapping
-    @RequestMapping("/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<DoctorDto> getById(@PathVariable Long id){
 
         return ResponseEntity.ok(doctorService.getById(id));
@@ -86,8 +85,7 @@ public class DoctorController {
     }
 
     //Logical Delete Rest API
-    @DeleteMapping
-    @RequestMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity delete(@PathVariable Long id){
 
