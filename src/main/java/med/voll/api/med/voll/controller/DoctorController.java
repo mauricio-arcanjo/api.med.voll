@@ -5,7 +5,9 @@ import jakarta.validation.Valid;
 import med.voll.api.med.voll.dto.DoctorDto;
 import med.voll.api.med.voll.dto.DoctorListDto;
 import med.voll.api.med.voll.dto.DoctorUpdateDto;
+import med.voll.api.med.voll.model.entity.Doctor;
 import med.voll.api.med.voll.service.impl.DoctorServiceImpl;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -22,6 +25,9 @@ public class DoctorController {
 
     @Autowired
     private DoctorServiceImpl doctorService;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     //Register Rest API
     @PostMapping
@@ -36,9 +42,17 @@ public class DoctorController {
      */
     public ResponseEntity<DoctorDto> register(@RequestBody @Valid DoctorDto doctorDto, UriComponentsBuilder uriComponentsBuilder){
 
+        Doctor doctor = doctorService.register(doctorDto);
+        URI uri = uriComponentsBuilder.path("/doctors/{id}").buildAndExpand(doctor.getId()).toUri();
 
+        return ResponseEntity.created(uri).body(modelMapper.map(doctor, DoctorDto.class));
+    }
 
-        return ResponseEntity.ok(doctorService.register(doctorDto));
+    @GetMapping
+    @RequestMapping("/{id}")
+    public ResponseEntity<DoctorDto> getById(@PathVariable Long id){
+
+        return ResponseEntity.ok(doctorService.getById(id));
     }
 
     // Find all Rest API
@@ -73,7 +87,7 @@ public class DoctorController {
 
     //Logical Delete Rest API
     @DeleteMapping
-    @RequestMapping("/{id}")
+    @RequestMapping("/delete/{id}")
     @Transactional
     public ResponseEntity delete(@PathVariable Long id){
 

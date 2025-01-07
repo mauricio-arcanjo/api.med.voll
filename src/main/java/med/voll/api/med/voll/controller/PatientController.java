@@ -30,6 +30,7 @@ public class PatientController {
      */
     public ResponseEntity<PatientDto> register(@RequestBody @Valid PatientDto patientDto){
 
+
         return ResponseEntity.ok(patientService.register(patientDto));
 
     }

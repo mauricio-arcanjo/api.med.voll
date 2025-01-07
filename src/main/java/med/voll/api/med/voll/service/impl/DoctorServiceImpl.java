@@ -25,11 +25,17 @@ public class DoctorServiceImpl implements DoctorService {
     private ModelMapper modelMapper;
 
     @Override
-    public DoctorDto register(DoctorDto doctorDto) {
+    public Doctor register(DoctorDto doctorDto) {
 
         Doctor doctor = modelMapper.map(doctorDto, Doctor.class);
 
-        return modelMapper.map(doctorRepository.save(doctor), DoctorDto.class);
+        return doctorRepository.save(doctor);
+    }
+
+    @Override
+    public DoctorDto getById(Long id) {
+
+        return modelMapper.map(doctorRepository.getReferenceById(id), DoctorDto.class);
     }
 
     @Override
@@ -55,12 +61,11 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public DoctorDto delete(Long id) {
+    public void delete(Long id) {
 
         var doctor = doctorRepository.getReferenceById(id);
         doctor.setActive(false);
-
-        return modelMapper.map(doctorRepository.save(doctor), DoctorDto.class);
+        modelMapper.map(doctorRepository.save(doctor), DoctorDto.class);
     }
 
 
