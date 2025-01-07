@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,25 +28,25 @@ public class PatientController {
         inconsistent state. If several actions need to be treated as a single unit of work (either all are completed, or none
         are applied). If an exception occurs, a rollback is automatically performed
      */
-    public PatientDto register(@RequestBody @Valid PatientDto patientDto){
+    public ResponseEntity<PatientDto> register(@RequestBody @Valid PatientDto patientDto){
 
-        return patientService.register(patientDto);
+        return ResponseEntity.ok(patientService.register(patientDto));
 
     }
 
     //List Rest API
     @GetMapping
-    public Page<PatientListDto> listPageable(@PageableDefault (size = 10, page = 0, sort = {"name"})Pageable pageable){
+    public ResponseEntity<Page<PatientListDto>> listPageable(@PageableDefault (size = 10, page = 0, sort = {"name"})Pageable pageable){
 
-        return patientService.listPageable(pageable);
+        return ResponseEntity.ok(patientService.listPageable(pageable));
     }
 
     //Update Rest API
     @PutMapping
     @Transactional
-    public PatientDto update(@RequestBody PatientUpdateDto patientUpdateDto){
+    public ResponseEntity<PatientDto> update(@RequestBody PatientUpdateDto patientUpdateDto){
 
-        return patientService.update(patientUpdateDto);
+        return ResponseEntity.ok(patientService.update(patientUpdateDto));
 
     }
 
@@ -53,10 +54,10 @@ public class PatientController {
     @DeleteMapping
     @RequestMapping("/{id}")
     @Transactional
-    public PatientDto delete(@PathVariable Long id){
+    public ResponseEntity delete(@PathVariable Long id){
 
-        return patientService.delete(id);
-
+        patientService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

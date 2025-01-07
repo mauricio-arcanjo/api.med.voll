@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -29,16 +31,21 @@ public class DoctorController {
         inconsistent state. If several actions need to be treated as a single unit of work (either all are completed, or none
         are applied). If an exception occurs, a rollback is automatically performed
      */
-    public DoctorDto register(@RequestBody @Valid DoctorDto doctorDto){
+    /*
+        UriComplementsBuilder inserts url of created object into head of requisition received after being successfully created
+     */
+    public ResponseEntity<DoctorDto> register(@RequestBody @Valid DoctorDto doctorDto, UriComponentsBuilder uriComponentsBuilder){
 
-        return doctorService.register(doctorDto);
+
+
+        return ResponseEntity.ok(doctorService.register(doctorDto));
     }
 
     // Find all Rest API
     @GetMapping
     @RequestMapping("/all")
-    public List<DoctorListDto> list() {
-        return doctorService.list();
+    public ResponseEntity<List<DoctorListDto>> list() {
+        return ResponseEntity.ok(doctorService.list());
     }
 
 /*
@@ -52,26 +59,26 @@ public class DoctorController {
      @PageableDefault can be used with one or more parameters. Also, if any parameter is sent by the URL, it's gonna override the default.
  */
     @GetMapping
-    public Page<DoctorListDto> listPageable(@PageableDefault(size=10, page=0, sort = {"name"} ) Pageable pageable) {
-        return doctorService.listPageable(pageable);
+    public ResponseEntity<Page<DoctorListDto>> listPageable(@PageableDefault(size=10, page=0, sort = {"name"} ) Pageable pageable) {
+        return ResponseEntity.ok(doctorService.listPageable(pageable));
     }
 
     //Update Rest API
     @PutMapping
     @Transactional
-    public DoctorDto update(@RequestBody DoctorUpdateDto doctorUpdateDto){
+    public ResponseEntity<DoctorDto> update(@RequestBody DoctorUpdateDto doctorUpdateDto){
 
-       return doctorService.update(doctorUpdateDto);
+       return ResponseEntity.ok(doctorService.update(doctorUpdateDto));
     }
 
     //Logical Delete Rest API
     @DeleteMapping
     @RequestMapping("/{id}")
     @Transactional
-    public DoctorDto delete(@PathVariable Long id){
+    public ResponseEntity delete(@PathVariable Long id){
 
-        return doctorService.delete(id);
-
+        doctorService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

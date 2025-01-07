@@ -6,6 +6,7 @@ import med.voll.api.med.voll.dto.AppointmentCancelDto;
 import med.voll.api.med.voll.dto.AppointmentDto;
 import med.voll.api.med.voll.service.interfaces.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,32 +20,32 @@ public class AppointmentController {
 
     @PostMapping
     @Transactional
-    public AppointmentDto createAppointment(@RequestBody @Valid AppointmentDto appointmentDto){
+    public ResponseEntity<AppointmentDto> createAppointment(@RequestBody @Valid AppointmentDto appointmentDto){
 
-        return appointmentService.createAppointment(appointmentDto);
+        return ResponseEntity.ok(appointmentService.createAppointment(appointmentDto));
 
     }
 
     @GetMapping
     @RequestMapping("/patient/{id}")
-    public List<AppointmentDto> listAppointmentsByPatient (@PathVariable Long id){
+    public ResponseEntity<List<AppointmentDto>> listAppointmentsByPatient (@PathVariable Long id){
 
-        return appointmentService.listByPatient(id);
+        return ResponseEntity.ok(appointmentService.listByPatient(id));
     }
 
     @GetMapping
     @RequestMapping("/doctor/{id}")
-    public List<AppointmentDto> listAppointmentsByDoctor (@PathVariable Long id){
+    public ResponseEntity<List<AppointmentDto>> listAppointmentsByDoctor (@PathVariable Long id){
 
-        return appointmentService.listByDoctor(id);
+        return ResponseEntity.ok(appointmentService.listByDoctor(id));
     }
 
     @PutMapping
     @Transactional
     @RequestMapping("/cancel")
-    public AppointmentDto cancel(@RequestBody @Valid AppointmentCancelDto appointmentCancelDto){
+    public ResponseEntity<AppointmentDto> cancel(@RequestBody @Valid AppointmentCancelDto appointmentCancelDto){
 
-        return appointmentService.cancelAppointment(appointmentCancelDto);
+        return ResponseEntity.ok(appointmentService.cancelAppointment(appointmentCancelDto));
     }
 
 }
