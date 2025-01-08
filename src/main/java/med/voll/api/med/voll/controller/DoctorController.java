@@ -23,11 +23,13 @@ import java.util.List;
 @RequestMapping("/doctors")
 public class DoctorController {
 
-    @Autowired
-    private DoctorServiceImpl doctorService;
+    private final DoctorServiceImpl doctorService;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private ModelMapper modelMapper;
+    public DoctorController(DoctorServiceImpl doctorService, ModelMapper modelMapper) {
+        this.doctorService = doctorService;
+        this.modelMapper = modelMapper;
+    }
 
     //Register Rest API
     @PostMapping
@@ -43,9 +45,11 @@ public class DoctorController {
     public ResponseEntity<DoctorDto> register(@RequestBody @Valid DoctorDto doctorDto, UriComponentsBuilder uriComponentsBuilder){
 
         Doctor doctor = doctorService.register(doctorDto);
-        URI uri = uriComponentsBuilder.path("/doctors/{id}").buildAndExpand(doctor.getId()).toUri();
+        URI uri = uriComponentsBuilder.path("/doctors/{id}")
+                .buildAndExpand(doctor.getId()).toUri();
 
-        return ResponseEntity.created(uri).body(modelMapper.map(doctor, DoctorDto.class));
+        return ResponseEntity.created(uri)
+                .body(modelMapper.map(doctor, DoctorDto.class));
     }
 
     @GetMapping("/{id}")

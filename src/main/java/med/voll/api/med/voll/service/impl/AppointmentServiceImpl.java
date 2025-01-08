@@ -23,20 +23,20 @@ import java.util.Random;
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
 
-    @Autowired
-    private AppointmentRepository appointmentRepository;
+    private final AppointmentRepository appointmentRepository;
+    private final PatientRepository patientRepository;
+    private final DoctorRepository doctorRepository;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private PatientRepository patientRepository;
-
-    @Autowired
-    private DoctorRepository doctorRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
+    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, PatientRepository patientRepository, DoctorRepository doctorRepository, ModelMapper modelMapper) {
+        this.appointmentRepository = appointmentRepository;
+        this.patientRepository = patientRepository;
+        this.doctorRepository = doctorRepository;
+        this.modelMapper = modelMapper;
+    }
 
     @Override
-    public AppointmentDto createAppointment(AppointmentDto appointmentDto) {
+    public Appointment createAppointment(AppointmentDto appointmentDto) {
 
         //Checks if patient is active and if there is another appointment in the same day
         checkPatientStatus(appointmentDto);
@@ -50,7 +50,14 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Appointment appointment = modelMapper.map(defineDoctor(appointmentDto), Appointment.class);
         appointment.setEndingTimeDay(appointment.getInitialTimeDay().plusHours(1));
-        return modelMapper.map(appointmentRepository.save(appointment), AppointmentDto.class);
+        return appointmentRepository.save(appointment);
+    }
+
+    @Override
+    public AppointmentDto getById(Long id) {
+
+        return modelMapper
+                .map(appointmentRepository.getReferenceById(id), AppointmentDto.class);
     }
 
     @Override

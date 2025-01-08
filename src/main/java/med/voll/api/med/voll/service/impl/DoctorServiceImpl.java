@@ -17,12 +17,15 @@ import java.util.List;
 @Service
 public class DoctorServiceImpl implements DoctorService {
 
-    @Autowired
-    private DoctorRepository doctorRepository;
+    private final DoctorRepository doctorRepository;
 
     //It's needed to add a bean configuration before use
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
+
+    public DoctorServiceImpl(DoctorRepository doctorRepository, ModelMapper modelMapper) {
+        this.doctorRepository = doctorRepository;
+        this.modelMapper = modelMapper;
+    }
 
     @Override
     public Doctor register(DoctorDto doctorDto) {
@@ -35,7 +38,8 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public DoctorDto getById(Long id) {
 
-        return modelMapper.map(doctorRepository.getReferenceById(id), DoctorDto.class);
+        return modelMapper
+                .map(doctorRepository.getReferenceById(id), DoctorDto.class);
     }
 
     @Override

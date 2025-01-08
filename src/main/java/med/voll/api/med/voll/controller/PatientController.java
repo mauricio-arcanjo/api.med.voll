@@ -5,20 +5,30 @@ import jakarta.validation.Valid;
 import med.voll.api.med.voll.dto.PatientDto;
 import med.voll.api.med.voll.dto.PatientListDto;
 import med.voll.api.med.voll.dto.PatientUpdateDto;
+import med.voll.api.med.voll.model.entity.Patient;
 import med.voll.api.med.voll.service.impl.PatientServiceImpl;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/patients")
 public class PatientController {
 
-    @Autowired
-    private PatientServiceImpl patientService;
+    private final PatientServiceImpl patientService;
+    private final ModelMapper modelMapper;
+
+    public PatientController(PatientServiceImpl patientService, ModelMapper modelMapper) {
+        this.patientService = patientService;
+        this.modelMapper = modelMapper;
+    }
 
     //Register Rest API
     @PostMapping
@@ -28,11 +38,19 @@ public class PatientController {
         inconsistent state. If several actions need to be treated as a single unit of work (either all are completed, or none
         are applied). If an exception occurs, a rollback is automatically performed
      */
-    public ResponseEntity<PatientDto> register(@RequestBody @Valid PatientDto patientDto){
+    public ResponseEntity<PatientDto> register(@RequestBody @Valid PatientDto patientDto, UriComponentsBuilder uriComponentsBuilder){
 
+        Patient patient = patientService.register(patientDto);
+        URI uri = uriComponentsBuilder.path("/patients/{id}").buildAndExpand(patient.getId()).toUri();
 
-        return ResponseEntity.ok(patientService.register(patientDto));
+        return ResponseEntity.created(uri).body(modelMapper.map(patient, PatientDto.class));
 
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PatientDto> getById(@PathVariable Long id){
+
+        return ResponseEntity.ok(patientService.getById(id));
     }
 
     //List Rest API
@@ -52,8 +70,7 @@ public class PatientController {
     }
 
     //Logical Delete Rest API
-    @DeleteMapping
-    @RequestMapping("/{id}")
+    @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity delete(@PathVariable Long id){
 

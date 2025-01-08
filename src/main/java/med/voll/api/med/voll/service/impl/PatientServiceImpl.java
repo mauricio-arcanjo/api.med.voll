@@ -15,23 +15,33 @@ import org.springframework.stereotype.Service;
 @Service
 public class PatientServiceImpl implements PatientService {
 
-    @Autowired
-    private PatientRepository patientRepository;
+    private final PatientRepository patientRepository;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private ModelMapper modelMapper;
+    public PatientServiceImpl(PatientRepository patientRepository, ModelMapper modelMapper) {
+        this.patientRepository = patientRepository;
+        this.modelMapper = modelMapper;
+    }
 
     @Override
-    public PatientDto register(PatientDto patientDto) {
+    public Patient register(PatientDto patientDto) {
 
-        Patient patient = modelMapper.map(patientDto, Patient.class);
+        return patientRepository
+                .save(modelMapper.map(patientDto, Patient.class));
+    }
 
-        return modelMapper.map(patientRepository.save(patient), PatientDto.class);
+    @Override
+    public PatientDto getById(Long id) {
+
+        return modelMapper
+                .map(patientRepository.getReferenceById(id), PatientDto.class);
+
     }
 
     @Override
     public Page<PatientListDto> listPageable(Pageable pageable) {
-        return patientRepository.findAllByActiveTrue(pageable).map(PatientListDto::new);
+        return patientRepository
+                .findAllByActiveTrue(pageable).map(PatientListDto::new);
     }
 
     @Override
@@ -41,7 +51,8 @@ public class PatientServiceImpl implements PatientService {
 
         patient.updateData(patientUpdateDto);
 
-        return modelMapper.map(patientRepository.save(patient), PatientDto.class);
+        return modelMapper
+                .map(patientRepository.save(patient), PatientDto.class);
     }
 
     @Override
@@ -50,7 +61,8 @@ public class PatientServiceImpl implements PatientService {
         var patient = patientRepository.getReferenceById(id);
         patient.setActive(false);
 
-        return modelMapper.map(patientRepository.save(patient), PatientDto.class);
+        return modelMapper
+                .map(patientRepository.save(patient), PatientDto.class);
 
     }
 }
