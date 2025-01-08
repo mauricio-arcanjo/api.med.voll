@@ -1,5 +1,6 @@
 package med.voll.api.med.voll.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import med.voll.api.med.voll.dto.AppointmentCancelDto;
 import med.voll.api.med.voll.dto.AppointmentDto;
@@ -11,6 +12,7 @@ import med.voll.api.med.voll.model.repository.AppointmentRepository;
 import med.voll.api.med.voll.model.repository.DoctorRepository;
 import med.voll.api.med.voll.model.repository.PatientRepository;
 import med.voll.api.med.voll.service.interfaces.AppointmentService;
+import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,7 +56,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public AppointmentDto getById(Long id) {
+    public AppointmentDto getById(Long id) throws MappingException, EntityNotFoundException {
 
         return modelMapper
                 .map(appointmentRepository.getReferenceById(id), AppointmentDto.class);
