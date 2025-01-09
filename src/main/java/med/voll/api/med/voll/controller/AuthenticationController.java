@@ -1,7 +1,9 @@
 package med.voll.api.med.voll.controller;
 
 import jakarta.validation.Valid;
+import med.voll.api.med.voll.infra.security.TokenService;
 import med.voll.api.med.voll.model.dto.UserDto;
+import med.voll.api.med.voll.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,11 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
     //Requires a @Bean configuration in SecurityConfiguration to spring be able to insert dependencies.
-    @Autowired
+//    @Autowired
     private final AuthenticationManager authenticationManager;
+    private final TokenService tokenService;
 
-    public AuthenticationController(AuthenticationManager authenticationManager) {
+    public AuthenticationController(AuthenticationManager authenticationManager, TokenService tokenService) {
         this.authenticationManager = authenticationManager;
+        this.tokenService = tokenService;
     }
 
     @PostMapping
@@ -29,7 +33,10 @@ public class AuthenticationController {
 
         var token = new UsernamePasswordAuthenticationToken(userDto.login(), userDto.password());
         var authentication = authenticationManager.authenticate(token);
-        return ResponseEntity.ok().build();
+
+        return ResponseEntity
+                .ok(tokenService
+                        .generateToken((User) authentication.getPrincipal()));
     }
 
 }
