@@ -1,4 +1,4 @@
-package med.voll.api.med.voll.dto;
+package med.voll.api.med.voll.model.dto;
 
 import med.voll.api.med.voll.model.entity.Doctor;
 import med.voll.api.med.voll.model.entity.Speciality;

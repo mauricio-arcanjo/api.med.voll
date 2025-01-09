@@ -2,13 +2,12 @@ package med.voll.api.med.voll.controller;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import med.voll.api.med.voll.dto.DoctorDto;
-import med.voll.api.med.voll.dto.DoctorListDto;
-import med.voll.api.med.voll.dto.DoctorUpdateDto;
+import med.voll.api.med.voll.model.dto.DoctorDto;
+import med.voll.api.med.voll.model.dto.DoctorListDto;
+import med.voll.api.med.voll.model.dto.DoctorUpdateDto;
 import med.voll.api.med.voll.model.entity.Doctor;
 import med.voll.api.med.voll.service.impl.DoctorServiceImpl;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;

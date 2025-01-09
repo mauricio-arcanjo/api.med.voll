@@ -1,4 +1,4 @@
-package med.voll.api.med.voll.exception;
+package med.voll.api.med.voll.infra.exception;
 
 public class AppointmentException extends RuntimeException {
 

@@ -1,6 +1,8 @@
 package med.voll.api.med.voll.service.interfaces;
 
-import med.voll.api.med.voll.dto.*;
+import med.voll.api.med.voll.model.dto.PatientDto;
+import med.voll.api.med.voll.model.dto.PatientListDto;
+import med.voll.api.med.voll.model.dto.PatientUpdateDto;
 import med.voll.api.med.voll.model.entity.Patient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

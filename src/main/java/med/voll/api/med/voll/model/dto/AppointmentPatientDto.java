@@ -1,4 +1,4 @@
-package med.voll.api.med.voll.dto;
+package med.voll.api.med.voll.model.dto;
 
 import lombok.*;
 

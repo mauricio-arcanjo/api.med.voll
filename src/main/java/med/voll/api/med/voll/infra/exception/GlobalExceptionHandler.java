@@ -1,9 +1,10 @@
-package med.voll.api.med.voll.exception;
+package med.voll.api.med.voll.infra.exception;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.MappingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -47,6 +48,12 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity handlerNotValidException(MethodArgumentNotValidException methodArgumentNotValidException){
+        List<FieldError> errors = methodArgumentNotValidException.getFieldErrors();
+        return ResponseEntity.badRequest().body(errors.stream().map(ValidationErrorDetails::new).toList());
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity handlerUsernameNotFoundException(MethodArgumentNotValidException methodArgumentNotValidException){
         List<FieldError> errors = methodArgumentNotValidException.getFieldErrors();
         return ResponseEntity.badRequest().body(errors.stream().map(ValidationErrorDetails::new).toList());
     }

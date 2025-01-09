@@ -2,7 +2,7 @@ package med.voll.api.med.voll.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import med.voll.api.med.voll.dto.PatientUpdateDto;
+import med.voll.api.med.voll.model.dto.PatientUpdateDto;
 
 @Getter
 @Setter

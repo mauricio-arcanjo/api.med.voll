@@ -2,7 +2,7 @@ package med.voll.api.med.voll.model.entity;
 
 import jakarta.persistence.Embeddable;
 import lombok.*;
-import med.voll.api.med.voll.dto.AddressDto;
+import med.voll.api.med.voll.model.dto.AddressDto;
 
 @Getter
 @Setter

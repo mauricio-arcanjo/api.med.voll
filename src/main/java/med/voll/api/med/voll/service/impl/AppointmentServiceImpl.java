@@ -2,9 +2,9 @@ package med.voll.api.med.voll.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
-import med.voll.api.med.voll.dto.AppointmentCancelDto;
-import med.voll.api.med.voll.dto.AppointmentDto;
-import med.voll.api.med.voll.exception.AppointmentException;
+import med.voll.api.med.voll.model.dto.AppointmentCancelDto;
+import med.voll.api.med.voll.model.dto.AppointmentDto;
+import med.voll.api.med.voll.infra.exception.AppointmentException;
 import med.voll.api.med.voll.model.entity.Appointment;
 import med.voll.api.med.voll.model.entity.Doctor;
 import med.voll.api.med.voll.model.entity.Patient;
@@ -14,7 +14,6 @@ import med.voll.api.med.voll.model.repository.PatientRepository;
 import med.voll.api.med.voll.service.interfaces.AppointmentService;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;

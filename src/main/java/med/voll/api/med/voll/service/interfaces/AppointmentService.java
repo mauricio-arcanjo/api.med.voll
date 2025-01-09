@@ -1,7 +1,7 @@
 package med.voll.api.med.voll.service.interfaces;
 
-import med.voll.api.med.voll.dto.AppointmentCancelDto;
-import med.voll.api.med.voll.dto.AppointmentDto;
+import med.voll.api.med.voll.model.dto.AppointmentCancelDto;
+import med.voll.api.med.voll.model.dto.AppointmentDto;
 import med.voll.api.med.voll.model.entity.Appointment;
 
 import java.util.List;

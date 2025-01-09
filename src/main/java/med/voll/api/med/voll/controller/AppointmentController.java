@@ -2,12 +2,11 @@ package med.voll.api.med.voll.controller;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import med.voll.api.med.voll.dto.AppointmentCancelDto;
-import med.voll.api.med.voll.dto.AppointmentDto;
+import med.voll.api.med.voll.model.dto.AppointmentCancelDto;
+import med.voll.api.med.voll.model.dto.AppointmentDto;
 import med.voll.api.med.voll.model.entity.Appointment;
 import med.voll.api.med.voll.service.interfaces.AppointmentService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
