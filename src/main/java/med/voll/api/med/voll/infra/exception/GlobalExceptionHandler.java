@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.MappingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -46,14 +47,22 @@ public class GlobalExceptionHandler {
         return ResponseEntity.notFound().build();
 
     }
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity handlerNotValidException(MethodArgumentNotValidException methodArgumentNotValidException){
-        List<FieldError> errors = methodArgumentNotValidException.getFieldErrors();
-        return ResponseEntity.badRequest().body(errors.stream().map(ValidationErrorDetails::new).toList());
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity handleBadCredentialsException(BadCredentialsException ex){
+
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        return ResponseEntity.badRequest().body(ex.getMessage()); //Both returns have the same result
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity handlerUsernameNotFoundException(MethodArgumentNotValidException methodArgumentNotValidException){
+    public ResponseEntity handleUsernameNotFoundException(){
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity handlerNotValidException(MethodArgumentNotValidException methodArgumentNotValidException){
         List<FieldError> errors = methodArgumentNotValidException.getFieldErrors();
         return ResponseEntity.badRequest().body(errors.stream().map(ValidationErrorDetails::new).toList());
     }
@@ -62,7 +71,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> handleGenericException(Exception exception,
                                                                WebRequest webRequest){
-
         ErrorDetails errorDetails = new ErrorDetails(
                 LocalDateTime.now(),
                 exception.getMessage(),

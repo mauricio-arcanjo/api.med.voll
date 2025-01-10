@@ -2,6 +2,7 @@ package med.voll.api.med.voll.controller;
 
 import jakarta.validation.Valid;
 import med.voll.api.med.voll.infra.security.TokenService;
+import med.voll.api.med.voll.model.dto.JwtTokenDto;
 import med.voll.api.med.voll.model.dto.UserDto;
 import med.voll.api.med.voll.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +32,14 @@ public class AuthenticationController {
     @PostMapping
     public ResponseEntity login(@RequestBody @Valid UserDto userDto){
 
-        var token = new UsernamePasswordAuthenticationToken(userDto.login(), userDto.password());
-        var authentication = authenticationManager.authenticate(token);
+        var authenticationToken = new UsernamePasswordAuthenticationToken(userDto.login(), userDto.password());
+        var authentication = authenticationManager.authenticate(authenticationToken);
+
+        var jwtToken = tokenService.generateToken((User) authentication.getPrincipal());
 
         return ResponseEntity
-                .ok(tokenService
-                        .generateToken((User) authentication.getPrincipal()));
+                .ok(new JwtTokenDto(jwtToken));
+        //Class SecurityFilter needs to be implemented to allow spring to filter requests with valid tokens
     }
 
 }
