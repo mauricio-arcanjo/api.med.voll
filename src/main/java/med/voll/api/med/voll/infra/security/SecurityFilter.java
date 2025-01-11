@@ -13,6 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component //Uses to spring load a generic class automatically
+
 public class SecurityFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
@@ -30,12 +31,12 @@ public class SecurityFilter extends OncePerRequestFilter {
         if (jwtToken != null){
             var subject = tokenService.getSubject(jwtToken);
             var user = userRepository.findByLogin(subject);
-            System.out.println("Permisão do usuario: " + user.getAuthorities());
-            var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()); //Usually second attribute is always null
 
+            //This method set user as authenticated to be able to interact with the application
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-        //This method allow the process to flow to the next filter/interceptor
+        //This method allow the process to flow to the next filter/interceptor. Do not call this method if you want to stop the proccess
         filterChain.doFilter(request, response);
     }
 

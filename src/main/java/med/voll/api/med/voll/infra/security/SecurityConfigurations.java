@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -15,6 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true) //This annotation is needed if you want to use @Secured in the rest controller classes
 public class SecurityConfigurations {
 
     //This object is needed to set the order of filters used by spring
@@ -43,11 +45,11 @@ public class SecurityConfigurations {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //Turns application into statelss and disables login screen
                 .authorizeHttpRequests(auth -> {
                             auth.requestMatchers(HttpMethod.POST, "/login").permitAll(); // Permite POST em /login
-                            auth.requestMatchers(HttpMethod.DELETE, "/doctors/**").hasRole("ADMIN"); //TEST THIS TWO CONFIGS
+//                            auth.requestMatchers(HttpMethod.DELETE, "/doctors/**").hasRole("ADMIN"); // This config can be changed for @Secured in the methods or class or rest controller. See DoctorController
                             auth.requestMatchers(HttpMethod.DELETE, "/patients/**").hasRole("[ADMIN]"); //Only admin can delete doctors and patients
                             auth.anyRequest().authenticated(); // Exige autenticação para qualquer outra requisição
                         })
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class) //IMPORTANT: This parameter needs to be add so spring will execute application filter before its own filter
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class) //IMPORTANT: This parameter needs to be added so spring will execute application filter before its own filter
                 .build();
     }
 
