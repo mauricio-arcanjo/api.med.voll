@@ -7,6 +7,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+/*
+    UserDetailsService interface with @Service tells spring that this class is responsible for authentication in this application. It proccess automatically
+    some authentication process.
+ */
 public class AuthenticationServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -16,7 +20,9 @@ public class AuthenticationServiceImpl implements UserDetailsService {
     }
 
     @Override
+    //Spring automatically calls this method when authentication process is started
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        //Checks in DB if user exists
         return userRepository.findByLogin(login);
     }
 }

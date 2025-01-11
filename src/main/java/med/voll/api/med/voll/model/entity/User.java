@@ -16,6 +16,8 @@ import java.util.List;
 @EqualsAndHashCode(of = "id")
 @Entity
 @Table(name = "users")
+//It's mandatory to implement interface UserDetails and its methods to allow all spring authentication methods and process to run correctly
+//All return from methods were changed, check it.
 public class User implements UserDetails {
 
     @Id
@@ -23,11 +25,16 @@ public class User implements UserDetails {
     private Long id;
 
     private String login;
+
+    //All passwords are saved in DB using a encryption method (here using BCrypt) and a @Bean configuration is needed in class SecurityConfiguration.
     private String password;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        //Role of user in the system.. eg. ROLE_ADMIN, ROLE_USER. This is set as constant for the tests but this info needs to come from DB
+        //A new class is needed to control all those role profiles
+//        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        return List.of(new SimpleGrantedAuthority("ROLE_ADMIN")); //To test Always use prefix "ROLE_" before all roles, eg: ROLE_ADMIN or ROLE_USER
     }
 
     @Override
@@ -40,6 +47,9 @@ public class User implements UserDetails {
         return password;
     }
 
+    /*
+        All set to true to tests and if there's no need to control those params.
+     */
     @Override
     public boolean isAccountNonExpired() {
         return true;

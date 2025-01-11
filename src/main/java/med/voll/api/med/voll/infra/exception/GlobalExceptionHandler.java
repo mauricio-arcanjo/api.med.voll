@@ -1,6 +1,7 @@
 package med.voll.api.med.voll.infra.exception;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.apache.tomcat.websocket.AuthenticationException;
 import org.modelmapper.MappingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,6 +67,7 @@ public class GlobalExceptionHandler {
         List<FieldError> errors = methodArgumentNotValidException.getFieldErrors();
         return ResponseEntity.badRequest().body(errors.stream().map(ValidationErrorDetails::new).toList());
     }
+
 
     //Handle Generic exception
     @ExceptionHandler(Exception.class)
