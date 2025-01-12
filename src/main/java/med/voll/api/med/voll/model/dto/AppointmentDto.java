@@ -2,6 +2,7 @@ package med.voll.api.med.voll.model.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import med.voll.api.med.voll.model.entity.Speciality;
 
 import java.time.LocalDateTime;
 
@@ -22,6 +23,8 @@ public class AppointmentDto {
     private LocalDateTime initialTimeDay;
 
     private LocalDateTime endingTimeDay;
+
+    private Speciality speciality;
 
     private AppointmentDoctorDto doctor;
 

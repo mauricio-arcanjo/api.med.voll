@@ -2,6 +2,7 @@ package med.voll.api.med.voll.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
+import jdk.swing.interop.SwingInterOpUtils;
 import med.voll.api.med.voll.model.dto.AppointmentCancelDto;
 import med.voll.api.med.voll.model.dto.AppointmentDto;
 import med.voll.api.med.voll.infra.exception.AppointmentException;
@@ -49,7 +50,10 @@ public class AppointmentServiceImpl implements AppointmentService {
         //Checks if there is at least 30 min of notice for appointment
         isScheduledWithMinimumNotice(appointmentDto.getInitialTimeDay());
 
-        Appointment appointment = modelMapper.map(defineDoctor(appointmentDto), Appointment.class);
+        //Defines appointment's doctor if they were not defined before
+        AppointmentDto appointmentWithDoctor = defineDoctor(appointmentDto);
+
+        Appointment appointment = modelMapper.map(appointmentWithDoctor, Appointment.class);
         appointment.setEndingTimeDay(appointment.getInitialTimeDay().plusHours(1));
         return appointmentRepository.save(appointment);
     }
@@ -97,6 +101,11 @@ public class AppointmentServiceImpl implements AppointmentService {
     private AppointmentDto defineDoctor(AppointmentDto appointmentDto) {
         //Check if doctor is active
         if (appointmentDto.getDoctorId() != null){
+
+            if (!doctorRepository.existsById(appointmentDto.getDoctorId())){
+                throw new AppointmentException("There isn't any doctor with informed ID!");
+            }
+
             Doctor doctor = doctorRepository.getReferenceById(appointmentDto.getDoctorId());
 
             if (doctor.getActive()){
@@ -109,19 +118,31 @@ public class AppointmentServiceImpl implements AppointmentService {
                 System.out.println("The doctor " + doctor.getName() + " with ID " + doctor.getId() + " isn't active!");
             }
         }
+
+        if (appointmentDto.getSpeciality() == null){
+            throw new AppointmentException("Doctor's speciality needs to be informed when doctor is not chosen!");
+        }
+
         System.out.println("Another doctor will be chosen randomly!");
         //Define doctor randomly
         List<Doctor> doctors = doctorRepository.findAllByActiveTrue();
-        Random random = new Random();
-        int randomId;
+        List<Doctor> specialityDoctors = doctors.stream()
+                .filter(doctor -> doctor.getSpeciality().equals(appointmentDto.getSpeciality())).toList();
 
-        do {
-            randomId = random.nextInt(doctors.size());
-            appointmentDto.setDoctorId(doctors.get(randomId).getId());
+        if (!specialityDoctors.isEmpty()){
+            Random random = new Random();
 
-        } while (!doctorAvailability(appointmentDto));
+            do {
+                int randomId = random.nextInt(specialityDoctors.size());
+                appointmentDto.setDoctorId(specialityDoctors.get(randomId).getId());
 
-        return appointmentDto;
+            } while (!doctorAvailability(appointmentDto));
+
+            return appointmentDto;
+        } else {
+            throw new AppointmentException("There isn't available doctors for speciality " + appointmentDto.getSpeciality());
+        }
+
     }
 
     private boolean doctorAvailability(AppointmentDto appointmentDto){
@@ -132,12 +153,19 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .anyMatch(appointment -> appointment.getInitialTimeDay().equals(appointmentDto.getInitialTimeDay()));
 
         if (doctorAvailability){
-            throw new AppointmentException("Doctor already has another appointment at the same time!");
+//            System.out.println("Doctor already has another appointment at the same time!");
+            throw new AppointmentException("Doctor already has another appointment at the same time!"); //TODO
+//            return false;
         }
         return true;
     }
 
     private void checkPatientStatus(AppointmentDto appointmentDto) throws AppointmentException {
+
+        if (!patientRepository.existsById(appointmentDto.getPatientId())){
+            throw new AppointmentException("There isn't any patient with informed ID!");
+        }
+
         Patient patient = patientRepository.getReferenceById(appointmentDto.getPatientId());
 
         // Check if the patient is inactive
