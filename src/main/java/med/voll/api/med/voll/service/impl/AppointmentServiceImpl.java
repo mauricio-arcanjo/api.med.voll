@@ -2,7 +2,6 @@ package med.voll.api.med.voll.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
-import jdk.swing.interop.SwingInterOpUtils;
 import med.voll.api.med.voll.model.dto.AppointmentCancelDto;
 import med.voll.api.med.voll.model.dto.AppointmentDto;
 import med.voll.api.med.voll.infra.exception.AppointmentException;
@@ -13,8 +12,11 @@ import med.voll.api.med.voll.model.repository.AppointmentRepository;
 import med.voll.api.med.voll.model.repository.DoctorRepository;
 import med.voll.api.med.voll.model.repository.PatientRepository;
 import med.voll.api.med.voll.service.interfaces.AppointmentService;
+import med.voll.api.med.voll.service.validation.AppointmentIsScheduledWithMinimumNotice;
+import med.voll.api.med.voll.service.validation.ClinicIsOpened;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.ValidationException;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -43,17 +45,19 @@ public class AppointmentServiceImpl implements AppointmentService {
         //Checks if patient is active and if there is another appointment in the same day
         checkPatientStatus(appointmentDto);
 
-        if (!clinicIsOpened(appointmentDto.getInitialTimeDay())){
-            throw new AppointmentException("Clinic is closed during the time requested!");
-        }
+        //Ckeco if clinic is openned
+        ClinicIsOpened clinicIsOpened = new ClinicIsOpened();
+        clinicIsOpened.validation(appointmentDto.getInitialTimeDay());
 
         //Checks if there is at least 30 min of notice for appointment
-        isScheduledWithMinimumNotice(appointmentDto.getInitialTimeDay());
+        AppointmentIsScheduledWithMinimumNotice appointmentIsScheduledWithMinimumNotice
+                = new AppointmentIsScheduledWithMinimumNotice();
+        appointmentIsScheduledWithMinimumNotice.validation(appointmentDto.getInitialTimeDay());
 
         //Defines appointment's doctor if they were not defined before
-        AppointmentDto appointmentWithDoctor = defineDoctor(appointmentDto);
+        AppointmentDto appointmentWithDoctorDefined = defineDoctor(appointmentDto);
 
-        Appointment appointment = modelMapper.map(appointmentWithDoctor, Appointment.class);
+        Appointment appointment = modelMapper.map(appointmentWithDoctorDefined, Appointment.class);
         appointment.setEndingTimeDay(appointment.getInitialTimeDay().plusHours(1));
         return appointmentRepository.save(appointment);
     }
@@ -85,6 +89,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public AppointmentDto cancelAppointment(AppointmentCancelDto appointmentCancelDto) {
+
+        if (!appointmentRepository.existsById(appointmentCancelDto.id())){
+            throw new RuntimeException ("Appointment with id " + appointmentCancelDto.id() + " doest not exist");
+        }
 
         Appointment appointment = appointmentRepository.getReferenceById(appointmentCancelDto.id());
 
@@ -122,26 +130,40 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (appointmentDto.getSpeciality() == null){
             throw new AppointmentException("Doctor's speciality needs to be informed when doctor is not chosen!");
         }
+        //REFACTORED IMPLEMENTATION
+        Doctor doctor = doctorRepository
+                .chooseRandomFreeDoctorAtDate(appointmentDto.getSpeciality(), appointmentDto.getInitialTimeDay());
 
-        System.out.println("Another doctor will be chosen randomly!");
-        //Define doctor randomly
-        List<Doctor> doctors = doctorRepository.findAllByActiveTrue();
-        List<Doctor> specialityDoctors = doctors.stream()
-                .filter(doctor -> doctor.getSpeciality().equals(appointmentDto.getSpeciality())).toList();
-
-        if (!specialityDoctors.isEmpty()){
-            Random random = new Random();
-
-            do {
-                int randomId = random.nextInt(specialityDoctors.size());
-                appointmentDto.setDoctorId(specialityDoctors.get(randomId).getId());
-
-            } while (!doctorAvailability(appointmentDto));
-
-            return appointmentDto;
-        } else {
+        if (doctor == null){
             throw new AppointmentException("There isn't available doctors for speciality " + appointmentDto.getSpeciality());
         }
+
+        appointmentDto.setDoctorId(doctor.getId());
+        System.out.println(doctor);
+        return appointmentDto;
+
+          //FIRST IMPLEMENTATION
+
+//        System.out.println("Another doctor will be chosen randomly!");
+//        //Define doctor randomly
+//        List<Doctor> doctors = doctorRepository.findAllByActiveTrue();
+//        List<Doctor> specialityDoctors = doctors.stream()
+//                .filter(doctor -> doctor.getSpeciality().equals(appointmentDto.getSpeciality())).toList();
+//
+//        if (!specialityDoctors.isEmpty()){
+//            Random random = new Random();
+//
+//            do {
+//                int randomId = random.nextInt(specialityDoctors.size());
+//                appointmentDto.setDoctorId(specialityDoctors.get(randomId).getId());
+//
+//            } while (!doctorAvailability(appointmentDto));
+//
+//            return appointmentDto;
+//        } else {
+//            throw new AppointmentException("There isn't available doctors for speciality " + appointmentDto.getSpeciality());
+//        }
+
 
     }
 
@@ -184,21 +206,6 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new AppointmentException("Patient can have only one appointment per day!");
         }
 
-    }
-
-    private boolean clinicIsOpened(LocalDateTime time) {
-
-        return time.getHour() >= 7 && time.getHour() < 19 && !time.getDayOfWeek().equals(DayOfWeek.SUNDAY);
-    }
-
-    private void isScheduledWithMinimumNotice(@NotNull LocalDateTime appointmentTime) {
-        // Define the minimum time threshold as 30 minutes from the current time
-        LocalDateTime minimumAllowedTime = LocalDateTime.now().plusMinutes(30);
-
-        // Check if the appointment is scheduled with sufficient notice
-        if (!appointmentTime.isAfter(minimumAllowedTime)) {
-            throw new AppointmentException("The appointment must be scheduled at least 30 minutes in advance.");
-        }
     }
 
 }
