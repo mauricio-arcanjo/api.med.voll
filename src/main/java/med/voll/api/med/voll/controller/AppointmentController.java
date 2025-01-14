@@ -1,5 +1,6 @@
 package med.voll.api.med.voll.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import med.voll.api.med.voll.model.dto.AppointmentCancelDto;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/appointments")
+@SecurityRequirement(name = "bearer-key") //Security configuration for swagger docs. check class SpringDocsConfiguration
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
@@ -42,23 +44,20 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.getById(id));
     }
 
-    @GetMapping
-    @RequestMapping("/patient/{id}")
+    @GetMapping("/patient/{id}")
     public ResponseEntity<List<AppointmentDto>> listAppointmentsByPatient (@PathVariable Long id){
 
         return ResponseEntity.ok(appointmentService.listByPatient(id));
     }
 
-    @GetMapping
-    @RequestMapping("/doctor/{id}")
+    @GetMapping("/doctor/{id}")
     public ResponseEntity<List<AppointmentDto>> listAppointmentsByDoctor (@PathVariable Long id){
 
         return ResponseEntity.ok(appointmentService.listByDoctor(id));
     }
 
-    @PutMapping
+    @DeleteMapping("/cancel")
     @Transactional
-    @RequestMapping("/cancel")
     public ResponseEntity<AppointmentDto> cancel(@RequestBody @Valid AppointmentCancelDto appointmentCancelDto){
 
         return ResponseEntity.ok(appointmentService.cancelAppointment(appointmentCancelDto));

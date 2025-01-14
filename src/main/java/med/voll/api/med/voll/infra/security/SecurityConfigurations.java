@@ -45,6 +45,7 @@ public class SecurityConfigurations {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //Turns application into statelss and disables login screen
                 .authorizeHttpRequests(auth -> {
                             auth.requestMatchers(HttpMethod.POST, "/login").permitAll(); // Permite POST em /login
+                            auth.requestMatchers( "v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll(); //Documentation - access on http://localhost:8080/v3/api-docs and http://localhost:8080/swagger-ui/index.html
 //                            auth.requestMatchers(HttpMethod.DELETE, "/doctors/**").hasRole("ADMIN"); // This config can be changed for @Secured in the methods or class or rest controller. See DoctorController
                             auth.requestMatchers(HttpMethod.DELETE, "/patients/**").hasRole("[ADMIN]"); //Only admin can delete doctors and patients
                             auth.anyRequest().authenticated(); // Exige autenticação para qualquer outra requisição

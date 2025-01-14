@@ -25,6 +25,8 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
                 select a.doctor.id from Appointment a
                 where
                 a.initialTimeDay = :initialTimeDay
+                and
+                a.reason is null
             )
             order by rand()
             limit 1

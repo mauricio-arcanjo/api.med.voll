@@ -1,5 +1,6 @@
 package med.voll.api.med.voll.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import med.voll.api.med.voll.model.dto.DoctorDto;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/doctors")
+@SecurityRequirement(name = "bearer-key") //Security configuration for swagger docs. check class SpringDocsConfiguration
 public class DoctorController {
 
     private final DoctorServiceImpl doctorService;
@@ -59,8 +61,7 @@ public class DoctorController {
     }
 
     // Find all Rest API
-    @GetMapping
-    @RequestMapping("/all")
+    @GetMapping("/all")
     public ResponseEntity<List<DoctorListDto>> list() {
         return ResponseEntity.ok(doctorService.list());
     }
