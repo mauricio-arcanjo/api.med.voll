@@ -1,5 +1,6 @@
 package med.voll.api.med.voll.model.dto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import med.voll.api.med.voll.model.entity.Speciality;
@@ -30,4 +31,12 @@ public class AppointmentDto {
 
     private AppointmentPatientDto patient;
 
+    public AppointmentDto(@Valid AppointmentCreateDto appointmentCreateDtoDto) {
+
+        this.doctorId = appointmentCreateDtoDto.doctorId();
+        this.patientId = appointmentCreateDtoDto.patientId();
+        this.speciality = appointmentCreateDtoDto.speciality();
+        this.initialTimeDay = appointmentCreateDtoDto.initialTimeDay();
+
+    }
 }

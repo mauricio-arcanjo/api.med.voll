@@ -68,7 +68,7 @@ class DoctorRepositoryTest {
         assertThat(freeDoctor).isNull();
 
     }    @Test
-    @DisplayName("Should return a doctor they are available at the date")
+    @DisplayName("Should return a doctor if they are available at the date")
     void chooseRandomFreeDoctorAtDateCase2() {
        /*
             Test parts:

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import med.voll.api.med.voll.model.dto.AppointmentCancelDto;
+import med.voll.api.med.voll.model.dto.AppointmentCreateDto;
 import med.voll.api.med.voll.model.dto.AppointmentDto;
 import med.voll.api.med.voll.model.entity.Appointment;
 import med.voll.api.med.voll.service.interfaces.AppointmentService;
@@ -30,8 +31,10 @@ public class AppointmentController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<AppointmentDto> createAppointment(@RequestBody @Valid AppointmentDto appointmentDto, UriComponentsBuilder uriComponentsBuilder){
+//    public ResponseEntity<AppointmentDto> createAppointment(@RequestBody @Valid AppointmentDto appointmentDto, UriComponentsBuilder uriComponentsBuilder){
+    public ResponseEntity<AppointmentDto> createAppointment(@RequestBody @Valid AppointmentCreateDto appointmentCreateDtoDto, UriComponentsBuilder uriComponentsBuilder){
 
+        AppointmentDto appointmentDto = new AppointmentDto(appointmentCreateDtoDto);
         Appointment appointment = appointmentService.createAppointment(appointmentDto);
         URI uri = uriComponentsBuilder.path("/appointments/{id}")
                 .buildAndExpand(appointment.getId()).toUri();
